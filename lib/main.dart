@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:yazboz/Design/DesignVeriables.dart';
 import 'package:yazboz/Pages/ciftliOyunBasla.dart';
+import 'package:yazboz/showFiles/ciftliOyunlarShow.dart';
 
+import 'Classes/ciftliOyun.dart';
 import 'databaseHelpers/databaseHelper.dart';
 
 void main() {
@@ -39,7 +41,12 @@ class _MyHomePageState extends State<MyHomePage> {
     var db = await DatabaseHelper.dbErisim();
   }
 
-  void ciftliOyunBasla(){
+  Future<List<CiftliOyun>> tumOyunlar() async {
+    var oyunlarList = await CiftliOyunlarShow().tumCiftliOyunlar();
+    return oyunlarList;
+  }
+
+  void ciftliOyunBasla() {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => CiftliOyunEkle()));
   }
@@ -71,6 +78,22 @@ class _MyHomePageState extends State<MyHomePage> {
                 padding: DesignVeribles.padding4,
                 child: Container(
                   color: Colors.red,
+                  child: FutureBuilder<List<CiftliOyun>>(
+                    future: tumOyunlar(),
+                    builder: (context, snapshot) {
+                      var games = snapshot.data;
+                      return ListView.builder(
+                          itemCount: games!.length,
+                          itemBuilder: (context, index) {
+                            var game = games[index];
+                            return GestureDetector(
+                              child: Card(
+                                child: Text(game.teamA),
+                              ),
+                            );
+                          });
+                    },
+                  ),
                 ),
               ),
             ),

@@ -91,6 +91,11 @@ class _CiftliOyunEkleState extends State<CiftliOyunEkle> {
     return toplam;
   }
 
+  var snackBar = SnackBar(
+    content:
+        Text('Takım adıları veya puanlarının boş olmadığından emin olun!!!'),
+  );
+
   Future<void> _showDialog(BuildContext context) async {
     return showDialog(
         context: context,
@@ -101,20 +106,41 @@ class _CiftliOyunEkleState extends State<CiftliOyunEkle> {
               style: DesignVeribles.alertStyle,
             ),
             content: Container(
-              child: Text("Oyunu kaydetmek istiyor musunuz?",
-                style: DesignVeribles.teamStyle,),
+              child: Text(
+                "Oyunu kaydetmek istiyor musunuz?",
+                style: DesignVeribles.teamStyle,
+              ),
             ),
             actions: [
               ElevatedButton(
-                onPressed: () {},
-                child: Text("Evet",style: DesignVeribles.butonTextStyle,),
+                onPressed: () {
+                  dbEkle(
+                      teamAname,
+                      teamBname,
+                      teamApuan,
+                      teamBpuan,
+                      teamAcezalar,
+                      teamBcezalar,
+                      toplamPuan(teamApuan, teamAcezalar),
+                      toplamPuan(teamBpuan, teamBcezalar));
+
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => MyApp()));
+                },
+                child: Text(
+                  "Evet",
+                  style: DesignVeribles.butonTextStyle,
+                ),
               ),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => MyApp()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => MyApp()));
                 },
-                child: Text("Hayır",style: DesignVeribles.butonTextStyle,),
+                child: Text(
+                  "Hayır",
+                  style: DesignVeribles.butonTextStyle,
+                ),
               )
             ],
           );
@@ -211,10 +237,16 @@ class _CiftliOyunEkleState extends State<CiftliOyunEkle> {
                           teamBcezalar +
                           toplamPuan(teamApuan, teamAcezalar).toString() +
                           toplamPuan(teamBpuan, teamBcezalar).toString());
-
                       //dbEkle(teamAname, teamBname, teamApuan, teamBpuan, teamAcezalar, teamBcezalar, toplamPuan(teamApuan, teamAcezalar), toplamPuan(teamBpuan, teamBcezalar));
 
-                      _showDialog(context);
+                      if (nameA.text.length <= 0 ||
+                          nameB.text.length <= 0 ||
+                          teamApuan.length <= 0 ||
+                          teamBpuan.length <= 0) {
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      } else {
+                        _showDialog(context);
+                      }
                     },
                     child: Text(
                       "Bitir",
