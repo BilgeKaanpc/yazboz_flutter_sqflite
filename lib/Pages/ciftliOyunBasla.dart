@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:yazboz/Design/DesignVeriables.dart';
+import 'package:yazboz/databaseHelpers/databaseHelper.dart';
+import 'package:yazboz/main.dart';
 
 class CiftliOyunEkle extends StatefulWidget {
   const CiftliOyunEkle({Key? key}) : super(key: key);
@@ -9,18 +11,53 @@ class CiftliOyunEkle extends StatefulWidget {
 }
 
 class _CiftliOyunEkleState extends State<CiftliOyunEkle> {
-  late String teamAcezalar =
-      "123-345-123-423-345-123-464-123-354-123-464-123-354-123-464-123-354-123";
-  late String teamBcezalar = "123-345-123-464-123-354-123-464-123-354";
+  late String teamAcezalar = "";
+  late String teamBcezalar = "";
+  late String teamApuan = "";
+  late String teamBpuan = "";
 
-  String teamA = "bizimkiler";
-  String teamB = "sizinkiler";
+  late TextEditingController cezaA = TextEditingController();
+  late TextEditingController cezaB = TextEditingController();
+
+  late TextEditingController puanA = TextEditingController();
+
+  late TextEditingController puanB = TextEditingController();
+
+  late TextEditingController nameA = TextEditingController();
+
+  late TextEditingController nameB = TextEditingController();
+
+  late String teamAname = "Team A";
+  late String teamBname = "Team B";
+
+  Future<void> dbEkle(
+      String teamAm,
+      String teamBm,
+      String teamApuanm,
+      String teamBpuanm,
+      String teamAcezam,
+      String teamBcezam,
+      int toplamAm,
+      int toplamBm) async {
+    var db = await DatabaseHelper.dbErisim();
+    var info = Map<String, dynamic>();
+    info["teamA"] = teamAm;
+    info["teamB"] = teamBm;
+    info["teamApuan"] = teamApuanm;
+    info["teamBpuan"] = teamBpuanm;
+    info["teamAceza"] = teamAcezam;
+    info["teamBceza"] = teamBcezam;
+    info["toplamA"] = toplamAm;
+    info["toplamB"] = toplamBm;
+
+    await db.insert("oyunlar", info);
+  }
 
   List cezaYaz(String text) {
     var cezaList = [];
     String sonCeza = "";
     for (int i = 0; i < text.length; i++) {
-      if (text[i] == "-") {
+      if (text[i] == ".") {
         var cezaInt = int.parse(sonCeza);
         cezaList.add(cezaInt);
         sonCeza = "";
@@ -31,143 +68,425 @@ class _CiftliOyunEkleState extends State<CiftliOyunEkle> {
     return cezaList;
   }
 
+  int toplamPuan(String veri, String cezalar) {
+    String deger = "";
+    int toplam = 0;
+    for (int i = 0; i < veri.length; i++) {
+      if (veri[i] == ".") {
+        toplam = toplam + int.parse(deger);
+        deger = "";
+      } else {
+        deger = deger + veri[i];
+      }
+    }
+    for (int i = 0; i < cezalar.length; i++) {
+      if (cezalar[i] == ".") {
+        toplam = toplam + int.parse(deger);
+        deger = "";
+      } else {
+        deger = deger + cezalar[i];
+      }
+    }
+
+    return toplam;
+  }
+
+  Future<void> _showDialog(BuildContext context) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(
+              "Oyun Bitti",
+              style: DesignVeribles.alertStyle,
+            ),
+            content: Container(
+              child: Text("Oyunu kaydetmek istiyor musunuz?",
+                style: DesignVeribles.teamStyle,),
+            ),
+            actions: [
+              ElevatedButton(
+                onPressed: () {},
+                child: Text("Evet",style: DesignVeribles.butonTextStyle,),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (context) => MyApp()));
+                },
+                child: Text("Hayır",style: DesignVeribles.butonTextStyle,),
+              )
+            ],
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Center(
         child: Column(
           children: [
             Expanded(child: Container()),
             Expanded(
               flex: 2,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                          labelText: "Team A",
-                            filled: true,
-                            fillColor: DesignVeribles.mainColor.shade300.withOpacity(0.3),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(24),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(),
-                    ),
-                  )
-                ],
-              ),
+              child: _teamNames(),
             ),
             Expanded(
-                flex: 1,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Text(
-                      teamA + "Cezalar",
-                      textAlign: TextAlign.center,
-                    ),
-                    Text(
-                      teamA + "Cezalar",
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
+                flex: 4,
+                child: Padding(
+                  padding: EdgeInsets.all(4.0),
+                  child: _puanCezaEkle(),
                 )),
             Expanded(
-              flex: 3,
+              flex: 1,
+              child: _cezalarText(),
+            ),
+            Expanded(
+              flex: 2,
+              child: _cezalarList(),
+            ),
+            Expanded(
+              flex: 1,
+              child: _puanTexts(),
+            ),
+            Expanded(
+              flex: 5,
+              child: _puanList(),
+            ),
+            Expanded(
+              child: Container(),
+            ),
+            Expanded(
+              flex: 2,
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Expanded(
-                    child: ListView.builder(
-                      itemBuilder: (context, index) {
-                        return Text(
-                          cezaYaz(teamAcezalar)[index].toString(),
-                          textAlign: TextAlign.center,
-                        );
-                      },
-                      itemCount: cezaYaz(teamAcezalar).length,
-                    ),
+                  Column(
+                    children: [
+                      Expanded(
+                          child: Text(
+                        teamAname,
+                        style: DesignVeribles.puanStyle,
+                      )),
+                      Expanded(
+                          child: Text(
+                        toplamPuan(teamApuan, teamAcezalar).toString(),
+                        style: DesignVeribles.teamStyle,
+                      )),
+                      Expanded(
+                          child: Text(
+                        "Toplam Oyun: ",
+                        style: DesignVeribles.puanStyle,
+                      ))
+                    ],
                   ),
-                  Expanded(
-                    child: ListView.builder(
-                      itemBuilder: (context, index) {
-                        return Text(
-                          cezaYaz(teamAcezalar)[index].toString(),
-                          textAlign: TextAlign.center,
-                        );
-                      },
-                      itemCount: cezaYaz(teamAcezalar).length,
+                  Column(
+                    children: [
+                      Expanded(
+                          child: Text(
+                        teamBname,
+                        style: DesignVeribles.puanStyle,
+                      )),
+                      Expanded(
+                          child: Text(
+                        toplamPuan(teamBpuan, teamBcezalar).toString(),
+                        style: DesignVeribles.teamStyle,
+                      )),
+                      Expanded(
+                          child: Text(
+                        cezaYaz(teamApuan).length.toString(),
+                        style: DesignVeribles.puanStyle,
+                      ))
+                    ],
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      print(teamAname +
+                          teamBname +
+                          teamApuan +
+                          teamBpuan +
+                          teamAcezalar +
+                          teamBcezalar +
+                          toplamPuan(teamApuan, teamAcezalar).toString() +
+                          toplamPuan(teamBpuan, teamBcezalar).toString());
+
+                      //dbEkle(teamAname, teamBname, teamApuan, teamBpuan, teamAcezalar, teamBcezalar, toplamPuan(teamApuan, teamAcezalar), toplamPuan(teamBpuan, teamBcezalar));
+
+                      _showDialog(context);
+                    },
+                    child: Text(
+                      "Bitir",
+                      style: DesignVeribles.butonTextStyle,
                     ),
                   ),
                 ],
               ),
             ),
             Expanded(
-                flex: 1,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Text(
-                      teamA + "Cezalar",
-                      textAlign: TextAlign.center,
-                    ),
-                    Text(
-                      teamA + "Cezalar",
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                )),
-            Expanded(
-              flex: 6,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: ListView.builder(
-                      itemBuilder: (context, index) {
-                        return Text(
-                          cezaYaz(teamAcezalar)[index].toString(),
-                          textAlign: TextAlign.center,
-                        );
-                      },
-                      itemCount: cezaYaz(teamAcezalar).length,
-                    ),
-                  ),
-                  Expanded(
-                    child: ListView.builder(
-                      itemBuilder: (context, index) {
-                        return Text(
-                          cezaYaz(teamAcezalar)[index].toString(),
-                          textAlign: TextAlign.center,
-                        );
-                      },
-                      itemCount: cezaYaz(teamAcezalar).length,
-                    ),
-                  ),
-                ],
-              ),
+              child: Container(),
             ),
-            Expanded(child: Container(),),
-            Expanded(
-              child: ElevatedButton(
-                onPressed: () {},
-                child: Text(
-                  "Bitir",
-                  style: DesignVeribles.butonTextStyle,
-                ),
-              ),
-            ),
-            Expanded(child: Container(),),
           ],
         ),
       ),
+    );
+  }
+
+  _puanCezaEkle() {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  controller: cezaA,
+                  keyboardType: TextInputType.number,
+                  onEditingComplete: () {
+                    setState(() {
+                      teamAcezalar = teamAcezalar + cezaA.text + ".";
+                      FocusManager.instance.primaryFocus?.unfocus();
+                      cezaA.clear();
+                    });
+                  },
+                  style: DesignVeribles.puanStyle,
+                  textAlign: TextAlign.center,
+                  decoration: InputDecoration(
+                    isDense: true,
+                    contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                    hintText: "Ceza Ekle",
+                    filled: true,
+                    fillColor:
+                        DesignVeribles.mainColor.shade300.withOpacity(0.3),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  controller: cezaB,
+                  keyboardType: TextInputType.number,
+                  onEditingComplete: () {
+                    setState(() {
+                      teamBcezalar = teamBcezalar + cezaB.text + ".";
+                      FocusManager.instance.primaryFocus?.unfocus();
+                      cezaB.clear();
+                    });
+                  },
+                  style: DesignVeribles.puanStyle,
+                  textAlign: TextAlign.center,
+                  decoration: InputDecoration(
+                    isDense: true,
+                    contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                    hintText: "Ceza Ekle",
+                    filled: true,
+                    fillColor:
+                        DesignVeribles.mainColor.shade300.withOpacity(0.3),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        Row(
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  controller: puanA,
+                  keyboardType: TextInputType.number,
+                  onEditingComplete: () {
+                    setState(() {
+                      teamApuan = teamApuan + puanA.text + ".";
+                      FocusManager.instance.primaryFocus?.unfocus();
+                      puanA.clear();
+                    });
+                  },
+                  style: DesignVeribles.puanStyle,
+                  textAlign: TextAlign.center,
+                  decoration: InputDecoration(
+                    isDense: true,
+                    contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                    hintText: "Puan Ekle",
+                    filled: true,
+                    fillColor:
+                        DesignVeribles.mainColor.shade300.withOpacity(0.3),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  controller: puanB,
+                  keyboardType: TextInputType.number,
+                  onEditingComplete: () {
+                    setState(() {
+                      teamBpuan = teamBpuan + puanB.text + ".";
+                      FocusManager.instance.primaryFocus?.unfocus();
+                      puanB.clear();
+                    });
+                  },
+                  style: DesignVeribles.puanStyle,
+                  textAlign: TextAlign.center,
+                  decoration: InputDecoration(
+                    isDense: true,
+                    contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                    hintText: "Puan Ekle",
+                    filled: true,
+                    fillColor:
+                        DesignVeribles.mainColor.shade300.withOpacity(0.3),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  _puanTexts() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        Text(
+          teamAname + " Puan",
+          textAlign: TextAlign.center,
+          style: DesignVeribles.puanStyle,
+        ),
+        Text(
+          teamBname + " Puan",
+          textAlign: TextAlign.center,
+          style: DesignVeribles.puanStyle,
+        ),
+      ],
+    );
+  }
+
+  _puanList() {
+    return Row(
+      children: [
+        Expanded(
+          child: ListView.builder(
+            itemBuilder: (context, index) {
+              return Column(
+                children: [
+                  Text(
+                    cezaYaz(teamApuan)[index].toString(),
+                    textAlign: TextAlign.center,
+                    style: DesignVeribles.scoreStyle,
+                  ),
+                  SizedBox(
+                    height: 8,
+                  )
+                ],
+              );
+            },
+            itemCount: cezaYaz(teamApuan).length,
+          ),
+        ),
+        Expanded(
+          child: ListView.builder(
+            itemBuilder: (context, index) {
+              return Column(
+                children: [
+                  Text(
+                    cezaYaz(teamBpuan)[index].toString(),
+                    textAlign: TextAlign.center,
+                    style: DesignVeribles.scoreStyle,
+                  ),
+                  SizedBox(
+                    height: 8,
+                  )
+                ],
+              );
+            },
+            itemCount: cezaYaz(teamBpuan).length,
+          ),
+        ),
+      ],
+    );
+  }
+
+  _cezalarList() {
+    return Row(
+      children: [
+        Expanded(
+          child: ListView.builder(
+            itemBuilder: (context, index) {
+              return Column(
+                children: [
+                  Text(
+                    cezaYaz(teamAcezalar)[index].toString(),
+                    textAlign: TextAlign.center,
+                    style: DesignVeribles.scoreStyle,
+                  ),
+                  SizedBox(
+                    height: 8,
+                  )
+                ],
+              );
+            },
+            itemCount: cezaYaz(teamAcezalar).length,
+          ),
+        ),
+        Expanded(
+          child: ListView.builder(
+            itemBuilder: (context, index) {
+              return Column(
+                children: [
+                  Text(
+                    cezaYaz(teamBcezalar)[index].toString(),
+                    textAlign: TextAlign.center,
+                    style: DesignVeribles.scoreStyle,
+                  ),
+                  SizedBox(
+                    height: 8,
+                  )
+                ],
+              );
+            },
+            itemCount: cezaYaz(teamBcezalar).length,
+          ),
+        ),
+      ],
+    );
+  }
+
+  _cezalarText() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        Text(
+          teamAname + " Cezalar",
+          textAlign: TextAlign.center,
+          style: DesignVeribles.cezaStyle,
+        ),
+        Text(
+          teamBname + " Cezalar",
+          textAlign: TextAlign.center,
+          style: DesignVeribles.cezaStyle,
+        ),
+      ],
     );
   }
 
@@ -177,47 +496,56 @@ class _CiftliOyunEkleState extends State<CiftliOyunEkle> {
         Expanded(
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: TextFormField(),
+            child: TextFormField(
+              controller: nameA,
+              onEditingComplete: () {
+                setState(() {
+                  teamAname = nameA.text;
+                  FocusManager.instance.primaryFocus?.unfocus();
+                });
+              },
+              style: DesignVeribles.teamStyle,
+              textAlign: TextAlign.center,
+              decoration: InputDecoration(
+                label: Center(
+                  child: Text("Team A"),
+                ),
+                filled: true,
+                fillColor: DesignVeribles.mainColor.shade300.withOpacity(0.3),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(24),
+                ),
+              ),
+            ),
           ),
         ),
         Expanded(
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: TextFormField(),
+            child: TextFormField(
+              controller: nameB,
+              onEditingComplete: () {
+                setState(() {
+                  teamBname = nameB.text;
+                  FocusManager.instance.primaryFocus?.unfocus();
+                });
+              },
+              style: DesignVeribles.teamStyle,
+              textAlign: TextAlign.center,
+              decoration: InputDecoration(
+                label: Center(
+                  child: Text("Team B"),
+                ),
+                filled: true,
+                fillColor: DesignVeribles.mainColor.shade300.withOpacity(0.3),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(24),
+                ),
+              ),
+            ),
           ),
         )
       ],
-    );
-  }
-
-  _teamCeza(BuildContext context) {
-    return Expanded(
-      child: Row(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              itemBuilder: (context, index) {
-                return Text(
-                  cezaYaz(teamAcezalar)[index].toString(),
-                  textAlign: TextAlign.center,
-                );
-              },
-              itemCount: cezaYaz(teamAcezalar).length,
-            ),
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemBuilder: (context, index) {
-                return Text(
-                  cezaYaz(teamAcezalar)[index].toString(),
-                  textAlign: TextAlign.center,
-                );
-              },
-              itemCount: cezaYaz(teamAcezalar).length,
-            ),
-          ),
-        ],
-      ),
     );
   }
 }
