@@ -41,69 +41,118 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: Center(
-            child: Text(
-          "Yaz-Boz",
-          style: DesignVeribles.baslikStyle,
-        )),
-      ),
       body: Center(
         child: Column(
           children: <Widget>[
+            Expanded(child: Container()),
+            Expanded(
+                child: Text(
+              "Yaz-Boz",
+              style: DesignVeribles.baslikStyle,
+            )),
+            Expanded(child: Container()),
             Expanded(
               flex: 1,
-              child: Text("Çiftli Oyunlar"),
-            ),
-            Expanded(
-              flex: 3,
-              child: Container(),
-            ),
-            Expanded(
-              flex: 1,
-              child: Text("Çiftli Oyunlar"),
-            ),
-            Expanded(
-              flex: 3,
-              child: Container(),
+              child: Text(
+                "Çiftli Oyunlar",
+                style: DesignVeribles.altBaslikStyle,
+              ),
             ),
             Expanded(
               flex: 4,
+              child: Padding(
+                padding: DesignVeribles.padding4,
+                child: Container(
+                  color: Colors.red,
+                ),
+              ),
+            ),
+            Expanded(child: Container()),
+            Expanded(
+              flex: 1,
+              child: Text(
+                "Tekli Oyunlar",
+                style: DesignVeribles.altBaslikStyle,
+              ),
+            ),
+            Expanded(
+              flex: 4,
+              child: Padding(
+                padding: DesignVeribles.padding4,
+                child: Container(
+                  color: Colors.red,
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 3,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding: DesignVeribles.padding4,
-                          child: ElevatedButton(
-                            onPressed: () {},
-                            child: Text("Buton1"),
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding: DesignVeribles.padding4,
+                            child: ElevatedButton(
+                              onPressed: () {},
+                              child: Text(
+                                "Çiftli Oyunlar",
+                                style: DesignVeribles.butonTextStyle,
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: DesignVeribles.padding4,
-                          child: ElevatedButton(
-                            onPressed: () {},
-                            child: Text("Buton2"),
+                        Expanded(
+                          child: Padding(
+                            padding: DesignVeribles.padding4,
+                            child: ElevatedButton(
+                              onPressed: () {},
+                              child: Text(
+                                "Tekli Oyunlar",
+                                style: DesignVeribles.butonTextStyle,
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
                           ),
                         ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: DesignVeribles.padding4,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: Size(100, 200),
+                        ),
+                        onPressed: () {},
+                        child: Text(
+                          "Tekli Oyun Oluştur",
+                          style: DesignVeribles.butonTextStyle,
+                          textAlign: TextAlign.center,
+                        ),
                       ),
-                    ],
+                    ),
                   ),
-                  ElevatedButton(
-                    onPressed: () {},
-                    child: Text("Buton3"),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {},
-                    child: Text("Buton4"),
+                  Expanded(
+                    child: Padding(
+                      padding: DesignVeribles.padding4,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: Size(100, 200),
+                        ),
+                        onPressed: () {},
+                        child: Text(
+                          "Çiftli Oyun Oluştur",
+                          style: DesignVeribles.butonTextStyle,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),
