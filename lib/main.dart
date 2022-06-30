@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:yazboz/Design/DesignVeriables.dart';
+import 'package:yazboz/Pages/ciftliOyunBasla.dart';
 
 import 'databaseHelpers/databaseHelper.dart';
 
@@ -36,6 +37,11 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   getir() async {
     var db = await DatabaseHelper.dbErisim();
+  }
+
+  void ciftliOyunBasla(){
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => CiftliOyunEkle()));
   }
 
   @override
@@ -145,7 +151,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         style: ElevatedButton.styleFrom(
                           minimumSize: Size(100, 200),
                         ),
-                        onPressed: () {},
+                        onPressed: ciftliOyunBasla,
                         child: Text(
                           "Çiftli Oyun Oluştur",
                           style: DesignVeribles.butonTextStyle,
