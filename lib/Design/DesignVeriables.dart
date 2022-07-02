@@ -28,6 +28,10 @@ class DesignVeribles{
         fontSize: 18,fontWeight: FontWeight.w900, color: mainColor
     );
 
+    static final TextStyle pointStyle = GoogleFonts.concertOne(
+        fontSize: 25,fontWeight: FontWeight.w900, color: mainColor
+    );
+
     static final padding4 = EdgeInsets.all(4.0);
 
 }

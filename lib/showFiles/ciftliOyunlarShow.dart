@@ -24,4 +24,11 @@ class CiftliOyunlarShow {
       return game;
     });
   }
+
+  Future<void> hedefSil(int id)async{
+    var db = await DatabaseHelper.dbErisim();
+
+    await db.delete("oyunlar",where: "Id = ?",whereArgs: [id]);
+  }
+
 }

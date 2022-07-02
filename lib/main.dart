@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:yazboz/Design/DesignVeriables.dart';
 import 'package:yazboz/Pages/ciftliOyunBasla.dart';
+import 'package:yazboz/Pages/gameDetay.dart';
 import 'package:yazboz/showFiles/ciftliOyunlarShow.dart';
 
 import 'Classes/ciftliOyun.dart';
@@ -52,6 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.blue.shade300,
       resizeToAvoidBottomInset: false,
       body: Center(
         child: Column(
@@ -68,7 +70,16 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Padding(
                 padding: DesignVeribles.padding4,
                 child: Container(
-                  color: Colors.red,
+                  decoration: BoxDecoration(
+                    color: Colors.lightBlueAccent,
+                    border: Border.all(
+                      color: Colors.black,
+                      width: 5,
+                    ),
+                    gradient: LinearGradient(
+                      colors: [Colors.white, Colors.black26],
+                    ),
+                  ),
                   child: FutureBuilder<List<CiftliOyun>>(
                     future: tumOyunlar(),
                     builder: (context, snapshot) {
@@ -79,8 +90,39 @@ class _MyHomePageState extends State<MyHomePage> {
                             var game = games[index];
                             return GestureDetector(
                               child: Card(
-                                child: Text(game.teamA),
+                                elevation: 8,
+                                shadowColor: Colors.green,
+                                margin: EdgeInsets.all(20),
+                                shape:  OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide(color: Colors.white)
+                                ),
+                                child: SizedBox(
+                                  height: 50,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Text(game.teamA),
+                                      Text((game.toplamA).toString()),
+                                      Text("-"),
+                                      Text((game.toplamB).toString()),
+                                      Text(game.teamB),
+                                    ],
+                                  ),
+                                ),
                               ),
+                              onDoubleTap: (){
+                                Navigator.push(
+                                    context, MaterialPageRoute(builder: (context) => gameDetay(teamA: game.teamA,teamB: game.teamB,teamApuan: game.teamApuan,teamBpuan: game.teamBpuan,teamAceza: game.teamAceza,teamBceza: game.teamBceza,toplamA: game.toplamA,toplamB: game.toplamB,)));
+
+                              },
+                              onLongPress: () async{
+                                await CiftliOyunlarShow().hedefSil(game.Id);
+                                setState((){
+
+                                });
+
+                              },
                             );
                           });
                     },

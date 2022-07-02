@@ -124,8 +124,7 @@ class _CiftliOyunEkleState extends State<CiftliOyunEkle> {
                       toplamPuan(teamApuan, teamAcezalar),
                       toplamPuan(teamBpuan, teamBcezalar));
 
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => MyApp()));
+                  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => MyApp()), (e) => false);
                 },
                 child: Text(
                   "Evet",
@@ -134,8 +133,7 @@ class _CiftliOyunEkleState extends State<CiftliOyunEkle> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => MyApp()));
+                  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => MyApp()), (e) => false);
                 },
                 child: Text(
                   "Hayır",
@@ -150,6 +148,7 @@ class _CiftliOyunEkleState extends State<CiftliOyunEkle> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.blue.shade300,
       resizeToAvoidBottomInset: false,
       body: Center(
         child: Column(
@@ -170,7 +169,7 @@ class _CiftliOyunEkleState extends State<CiftliOyunEkle> {
               child: _cezalarText(),
             ),
             Expanded(
-              flex: 2,
+              flex: 3,
               child: _cezalarList(),
             ),
             Expanded(
@@ -229,14 +228,7 @@ class _CiftliOyunEkleState extends State<CiftliOyunEkle> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      print(teamAname +
-                          teamBname +
-                          teamApuan +
-                          teamBpuan +
-                          teamAcezalar +
-                          teamBcezalar +
-                          toplamPuan(teamApuan, teamAcezalar).toString() +
-                          toplamPuan(teamBpuan, teamBcezalar).toString());
+
                       //dbEkle(teamAname, teamBname, teamApuan, teamBpuan, teamAcezalar, teamBcezalar, toplamPuan(teamApuan, teamAcezalar), toplamPuan(teamBpuan, teamBcezalar));
 
                       if (nameA.text.length <= 0 ||
@@ -418,41 +410,73 @@ class _CiftliOyunEkleState extends State<CiftliOyunEkle> {
     return Row(
       children: [
         Expanded(
-          child: ListView.builder(
-            itemBuilder: (context, index) {
-              return Column(
-                children: [
-                  Text(
-                    cezaYaz(teamApuan)[index].toString(),
-                    textAlign: TextAlign.center,
-                    style: DesignVeribles.scoreStyle,
-                  ),
-                  SizedBox(
-                    height: 8,
-                  )
-                ],
-              );
-            },
-            itemCount: cezaYaz(teamApuan).length,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.lightBlueAccent,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: Colors.black,
+                  width: 5,
+                ),
+                gradient: LinearGradient(
+                  colors: [Colors.white, Colors.black26],
+                ),
+              ),
+              child: ListView.builder(
+                itemBuilder: (context, index) {
+                  return Column(
+                    children: [
+                      Text(
+                        cezaYaz(teamApuan)[index].toString(),
+                        textAlign: TextAlign.center,
+                        style: DesignVeribles.scoreStyle,
+                      ),
+                      SizedBox(
+                        height: 8,
+                      )
+                    ],
+                  );
+                },
+                itemCount: cezaYaz(teamApuan).length,
+              ),
+            ),
           ),
         ),
         Expanded(
-          child: ListView.builder(
-            itemBuilder: (context, index) {
-              return Column(
-                children: [
-                  Text(
-                    cezaYaz(teamBpuan)[index].toString(),
-                    textAlign: TextAlign.center,
-                    style: DesignVeribles.scoreStyle,
-                  ),
-                  SizedBox(
-                    height: 8,
-                  )
-                ],
-              );
-            },
-            itemCount: cezaYaz(teamBpuan).length,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.lightBlueAccent,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: Colors.black,
+                  width: 5,
+                ),
+                gradient: LinearGradient(
+                  colors: [Colors.white, Colors.black26],
+                ),
+              ),
+              child: ListView.builder(
+                itemBuilder: (context, index) {
+                  return Column(
+                    children: [
+                      Text(
+                        cezaYaz(teamBpuan)[index].toString(),
+                        textAlign: TextAlign.center,
+                        style: DesignVeribles.scoreStyle,
+                      ),
+                      SizedBox(
+                        height: 8,
+                      )
+                    ],
+                  );
+                },
+                itemCount: cezaYaz(teamBpuan).length,
+              ),
+            ),
           ),
         ),
       ],
@@ -463,41 +487,73 @@ class _CiftliOyunEkleState extends State<CiftliOyunEkle> {
     return Row(
       children: [
         Expanded(
-          child: ListView.builder(
-            itemBuilder: (context, index) {
-              return Column(
-                children: [
-                  Text(
-                    cezaYaz(teamAcezalar)[index].toString(),
-                    textAlign: TextAlign.center,
-                    style: DesignVeribles.scoreStyle,
-                  ),
-                  SizedBox(
-                    height: 8,
-                  )
-                ],
-              );
-            },
-            itemCount: cezaYaz(teamAcezalar).length,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.lightBlueAccent,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: Colors.black,
+                  width: 5,
+                ),
+                gradient: LinearGradient(
+                  colors: [Colors.white, Colors.black26],
+                ),
+              ),
+              child: ListView.builder(
+                itemBuilder: (context, index) {
+                  return Column(
+                    children: [
+                      Text(
+                        cezaYaz(teamAcezalar)[index].toString(),
+                        textAlign: TextAlign.center,
+                        style: DesignVeribles.scoreStyle,
+                      ),
+                      SizedBox(
+                        height: 8,
+                      )
+                    ],
+                  );
+                },
+                itemCount: cezaYaz(teamAcezalar).length,
+              ),
+            ),
           ),
         ),
         Expanded(
-          child: ListView.builder(
-            itemBuilder: (context, index) {
-              return Column(
-                children: [
-                  Text(
-                    cezaYaz(teamBcezalar)[index].toString(),
-                    textAlign: TextAlign.center,
-                    style: DesignVeribles.scoreStyle,
-                  ),
-                  SizedBox(
-                    height: 8,
-                  )
-                ],
-              );
-            },
-            itemCount: cezaYaz(teamBcezalar).length,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.lightBlueAccent,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: Colors.black,
+                  width: 5,
+                ),
+                gradient: LinearGradient(
+                  colors: [Colors.white, Colors.black26],
+                ),
+              ),
+              child: ListView.builder(
+                itemBuilder: (context, index) {
+                  return Column(
+                    children: [
+                      Text(
+                        cezaYaz(teamBcezalar)[index].toString(),
+                        textAlign: TextAlign.center,
+                        style: DesignVeribles.scoreStyle,
+                      ),
+                      SizedBox(
+                        height: 8,
+                      )
+                    ],
+                  );
+                },
+                itemCount: cezaYaz(teamBcezalar).length,
+              ),
+            ),
           ),
         ),
       ],
