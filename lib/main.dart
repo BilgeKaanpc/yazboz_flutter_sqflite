@@ -62,16 +62,9 @@ class _MyHomePageState extends State<MyHomePage> {
               "Yaz-Boz",
               style: DesignVeribles.baslikStyle,
             )),
-            Expanded(child: Container()),
+
             Expanded(
-              flex: 1,
-              child: Text(
-                "Çiftli Oyunlar",
-                style: DesignVeribles.altBaslikStyle,
-              ),
-            ),
-            Expanded(
-              flex: 4,
+              flex: 8,
               child: Padding(
                 padding: DesignVeribles.padding4,
                 child: Container(
@@ -95,102 +88,19 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
             ),
-            Expanded(child: Container()),
+
             Expanded(
-              flex: 1,
-              child: Text(
-                "Tekli Oyunlar",
-                style: DesignVeribles.altBaslikStyle,
-              ),
-            ),
-            Expanded(
-              flex: 4,
-              child: Padding(
-                padding: DesignVeribles.padding4,
-                child: Container(
-                  color: Colors.red,
-                ),
-              ),
-            ),
-            Expanded(
-              flex: 3,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Expanded(
-                          child: Padding(
-                            padding: DesignVeribles.padding4,
-                            child: ElevatedButton(
-                              onPressed: () {},
-                              child: Text(
-                                "Çiftli Oyunlar",
-                                style: DesignVeribles.butonTextStyle,
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Padding(
-                            padding: DesignVeribles.padding4,
-                            child: ElevatedButton(
-                              onPressed: () {},
-                              child: Text(
-                                "Tekli Oyunlar",
-                                style: DesignVeribles.butonTextStyle,
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: DesignVeribles.padding4,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          minimumSize: Size(100, 200),
-                        ),
-                        onPressed: () {},
-                        child: Text(
-                          "Tekli Oyun Oluştur",
-                          style: DesignVeribles.butonTextStyle,
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: DesignVeribles.padding4,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          minimumSize: Size(100, 200),
-                        ),
-                        onPressed: ciftliOyunBasla,
-                        child: Text(
-                          "Çiftli Oyun Oluştur",
-                          style: DesignVeribles.butonTextStyle,
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
+              flex: 2,
               child: Container(),
             )
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: ciftliOyunBasla,
+        child: Icon(Icons.add),
+      ),
+
     );
   }
 }
