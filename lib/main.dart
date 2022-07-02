@@ -37,9 +37,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  getir() async {
-    var db = await DatabaseHelper.dbErisim();
-  }
+
 
   Future<List<CiftliOyun>> tumOyunlar() async {
     var oyunlarList = await CiftliOyunlarShow().tumCiftliOyunlar();
