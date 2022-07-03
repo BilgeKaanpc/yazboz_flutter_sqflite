@@ -1,4 +1,4 @@
-package com.example.yazboz
+package com.winniesoft.yazboz
 
 import io.flutter.embedding.android.FlutterActivity
 

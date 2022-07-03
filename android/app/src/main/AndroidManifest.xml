@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.yazboz">
+    package="com.winniesoft.yazboz">
    <application
         android:label="Eşli 101 Yaz-Boz"
         android:name="${applicationName}"
