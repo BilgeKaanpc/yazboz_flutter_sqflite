@@ -10,11 +10,8 @@ class DatabaseHelper{
 
 
   static Future<Database> dbErisim() async{
-    print("girdik6");
     String databasePath = join(await getDatabasesPath(),databaseName);
-    print("girdik7");
     if(await databaseExists(databasePath)){
-      print("veri var");
     }else{
 
       ByteData data = await rootBundle.load("database/$databaseName");

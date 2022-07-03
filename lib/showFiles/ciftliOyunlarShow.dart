@@ -4,12 +4,9 @@ import 'package:yazboz/databaseHelpers/databaseHelper.dart';
 class CiftliOyunlarShow {
   Future<List<CiftliOyun>> tumCiftliOyunlar() async {
     var db = await DatabaseHelper.dbErisim();
-      print("girdik");
     List<Map<String,dynamic>> maps = await db.rawQuery("SELECT * FROM oyunlar");
-    print("1");
     return List.generate(maps.length, (i) {
       var satir = maps[i];
-      print("girdik3");
       var game = CiftliOyun(
           satir["Id"],
           satir["teamA"],
